@@ -1,16 +1,16 @@
 {
-  "name": "electron-minidump",
+  "name": "electron-minidump-debug",
   "version": "3.2.1",
   "description": "Symbolicate crashes in minidump format",
   "main": "index.js",
   "bin": {
-    "electron-minidump": "./cli.js"
+    "electron-minidump-debug": "./cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jeremy Apthorp <nornagon@nornagon.net>",
-  "repository": "https://github.com/nornagon/electron-minidump",
+  "author": "Yun-Route <1486964586@qq.com>",
+  "repository": "https://github.com/Yun-Route/electron-minidump-debug",
   "keywords": [
     "minidump",
     "crash",
