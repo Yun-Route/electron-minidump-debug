@@ -1,0 +1,25 @@
+{
+  "name": "electron-minidump",
+  "version": "3.2.1",
+  "description": "Symbolicate crashes in minidump format",
+  "main": "index.js",
+  "bin": {
+    "electron-minidump": "./cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeremy Apthorp <nornagon@nornagon.net>",
+  "repository": "https://github.com/nornagon/electron-minidump",
+  "keywords": [
+    "minidump",
+    "crash",
+    "electron"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "minidump": "^0.23.0",
+    "progress": "^2.0.3",
+    "yargs": "^13.1.0"
+  }
+}
