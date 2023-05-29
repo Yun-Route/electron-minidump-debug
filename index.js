@@ -139,6 +139,29 @@ const getParseResult = async (file, directory) => {
   return result.toString('utf8');
 };
 
+const deleteAllFile = async (file) => {
+  const prefix = getFileName(file);
+  const fileList = fs.readdirSync(MinidumpRoot, { withFileTypes: true });
+  const promiseList = fileList
+    .map((file) => {
+      if (!file.name.includes(prefix)) {
+        return null;
+      }
+      return new Promise((resolve, reject) => {
+        const fileOrFolder = path.join(MinidumpRoot, file.name);
+        exec(`rm -rf ${escapeSpace(fileOrFolder)}`, (error, stdout) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(stdout);
+          }
+        });
+      });
+    })
+    .filter(item => Boolean(item));
+  await Promise.allSettled(promiseList);
+};
+
 const electronMinidump = async (options) => {
   const { quiet, force, file } = options;
   if (!fs.existsSync(MinidumpRoot)) {
@@ -146,14 +169,22 @@ const electronMinidump = async (options) => {
   }
   const current = Date.now();
   console.log('step 1', file, Date.now(), Date.now() - current);
-  const rawContent = await getRawContent(file);
-  console.log('step 2', rawContent.length, Date.now(), Date.now() - current);
-  const modules = getParseModules(rawContent);
-  console.log('step 3', modules.length, Date.now(), Date.now() - current);
-  const directory = await getSymbolFiles(file, modules);
-  console.log('step 4', directory, Date.now(), Date.now() - current);
-  const content = await getParseResult(file, directory);
-  console.log('step 5', content.length, Date.now(), Date.now() - current);
+  try {
+    const rawContent = await getRawContent(file);
+    console.log('step 2', rawContent.length, Date.now(), Date.now() - current);
+    const modules = getParseModules(rawContent);
+    console.log('step 3', modules.length, Date.now(), Date.now() - current);
+    const directory = await getSymbolFiles(file, modules);
+    console.log('step 4', directory, Date.now(), Date.now() - current);
+    const content = await getParseResult(file, directory);
+    console.log('step 5', content.length, Date.now(), Date.now() - current);
+    deleteAllFile(file);
+    console.log('setp 6');
+  } catch (error) {
+    deleteAllFile(file);
+    console.log('setp 7');
+    throw error;
+  }
 };
 
 module.exports = { minidump: electronMinidump }
